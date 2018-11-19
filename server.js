@@ -4,17 +4,13 @@
 
 */
 
-var express = require('express');
-var app = require('./util/config.js')(express);
-var elastic = require('./util/search.js');
+var app = require('./util/config.js')();
 
 
-console.log(elastic);
+var ElasticSearch = require('./util/search.js');
+var elasticsearch = new ElasticSearch();
+elasticsearch.ping();
 
-
-app.get('/', function(req, res) {
-    res.send('howdy dowdy!');
-});
 
 app.set('port', process.env.PORT || 3000);
 app.listen(app.get('port'), function() {
