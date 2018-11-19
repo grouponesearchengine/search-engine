@@ -4,6 +4,10 @@ var express = require('express');
 var router = express.Router();
 
 
+var ElasticSearch = require('../util/search');
+var elasticsearch = new ElasticSearch();
+
+
 router.get('/', function(req, res) {
     res.sendFile('index.html');
 });
@@ -11,11 +15,14 @@ router.get('/', function(req, res) {
 
 router.post('/search', function(req, res) {
 
-    console.log('backend body: '+JSON.stringify(req.body));
-    res.send(req.body);
-
+    var query_text = req.body.text;
+    elasticsearch.search(query_text)
+    .then(function(data) {
+        res.send(data);
+    })
+    .catch(console.log);
+    
 });
-
 
 
 module.exports = router;
