@@ -9,5 +9,14 @@ router.get('/', function(req, res) {
 });
 
 
+router.post('/search', function(req, res) {
+
+    console.log('backend body: '+JSON.stringify(req.body));
+    res.send(req.body);
+
+});
+
+
+
 module.exports = router;
 

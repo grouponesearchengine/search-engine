@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +10,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="js/controller.js"></script>
+
   </head>
   <body>
 
     <form>
-      <div>Query: </div>
-      <div><input type="text" name="firstname"></div>
-    </form>
+      <div>QueryBase </div>
+      <div>
+        
+        <div class="query-div">
+          <input class="query-text" type="text" placeholder="Enter a query..." >
+          <input class="query-search-button" type="submit" value="Search", name="Search">
 
+        </div>
+
+      </div>
+    </form>
+  
   </body>
 </html>
+
