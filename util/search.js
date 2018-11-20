@@ -109,14 +109,17 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
 ElasticSearch.prototype.search = function(query_text) {
 
     var body = {
-        size: 4,
+        size: 10,
         from: 0,
         query: {
             match: {
+                //abstract: {
+                //    query: query_text,
+                //    minimum_should_match: this.min_match,
+                //    fuzziness: this.fuzziness
+                //},
                 abstract: {
-                    query: query_text,
-                    minimum_should_match: this.min_match,
-                    fuzziness: this.fuzziness
+                    query: query_text
                 }
             }
         }
