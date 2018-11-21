@@ -135,6 +135,19 @@ ElasticSearch.prototype.query_criteria = function(query_text) {
                     'subjects'
                 ]
             }
+        },
+        highlight: {
+            order: 'score',
+            pre_tags: ['<snip>'],
+            post_tags: ['</snip>'],
+            fields: {
+                abstract: {},
+                discussion: {},
+                introduction: {},
+                results: {},
+                methods: {},
+                //'*': {}
+            }
         }
     };
 
@@ -150,8 +163,14 @@ ElasticSearch.prototype.search = function(query_text) {
             body: self.query_criteria(query_text)
         }).then(function(res) {
             if (res.hits.total > 0) {
-                var output = res.hits.hits.map(x => x._source);
-                resolve(output);
+                var data = res.hits.hits.map(function(x) {
+
+                    return {
+                        result: x._source,
+                        snippet: x.highlight
+                    };
+                });
+                resolve(data);
             } else {
                 resolve([]);
             }

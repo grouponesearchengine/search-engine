@@ -2,16 +2,40 @@
 
 var KEYS = Object.freeze({
     ENTER: 13,
-})
+});
+
+
+function parseSnippets(snippets) {
+
+    var snippet = {
+        str: '', len: 0,
+        MAX_LEN: 3, MAX_CAT: 5
+    };
+
+    for (var i = 0; i < snippet.MAX_CAT && snippet.len < snippet.MAX_LEN; ++i) {
+        for (var key in snippets) {
+            var snip = snippets[key][i];
+            if (snip != undefined) {
+                snippet.str += (snip + '... ');
+                if (++snippet.len >= snippet.MAX_LEN)
+                    break;
+            }
+        }
+    }
+
+    return snippet.str;
+
+}
 
 
 function displayResults(data) {
     data.forEach(function(elem) {
+        var snippets = parseSnippets(elem.snippet);
         var markup_template = 
             `<div>
-                <h4> ${elem.title} </h4>
-                <div> ${elem.abstract} </div>
-                <div> ${elem.url} </div>
+                <h4> ${elem.result.title} </h4>
+                <span> ${snippets} </span>
+                <p> ${elem.result.url} </p>
             </div>`;
         $('.results-layout').append(markup_template);
 
@@ -33,13 +57,9 @@ function initQuery() {
         if (!query_text.trim()) 
             return;
 
-        var query = {
-            text: query_text
-        };
-
         $.ajax({
             type: 'POST',
-            data: JSON.stringify(query),
+            data: JSON.stringify({ text: query_text }),
             contentType: 'application/json',
             url: '/search',
             success: function(data) {
