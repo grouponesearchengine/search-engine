@@ -70,9 +70,9 @@ ElasticSearch.prototype.bulk_index_repo = async function(repo, index, type) {
 
 ElasticSearch.prototype.bulk_index = async function(path, index, type) {
     
-    var data_raw = await this.fs.readFileSync(path);
+    var data_raw = await this.fs.readFileSync(path, 'utf-8');
     var data = JSON.parse(data_raw);
-    console.log(data.length + ' items parsed into database');
+    console.log(data.length + ' items to be added to database');
 
     var bulk_body = [];
     data.forEach(elem => {
@@ -102,6 +102,30 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
             self.inserted = 0;
         })
         .catch(console.error);
+
+}
+
+
+
+ElasticSearch.prototype.get_query_criteria = function() {
+
+    return {
+        size: 10,
+        from: 0,
+        query: {
+            match: {
+                //abstract: {
+                //    query: query_text,
+                //    minimum_should_match: this.min_match,
+                //    fuzziness: this.fuzziness
+                //},
+                abstract: {
+                    query: query_text
+                }
+            }
+        }
+    };
+
 
 }
 
