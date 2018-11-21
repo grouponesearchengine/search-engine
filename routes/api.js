@@ -10,7 +10,6 @@ var elasticsearch = new ElasticSearch();
 // uncomment to load data into repo
 // elasticsearch.bulk_index_repo('repository/', 'science', 'articles');
 
-
 router.get('/', function(req, res) {
     res.sendFile('index.html');
 });

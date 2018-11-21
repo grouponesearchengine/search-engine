@@ -17,6 +17,7 @@ function ElasticSearch() {
         ]
     });
 
+    this.index = 'science';
     this.min_match = 3;
     this.fuzziness = 2;
 
@@ -33,6 +34,11 @@ ElasticSearch.prototype.ping = function() {
             console.log('All is well!');
         }
     });
+}
+
+
+ElasticSearch.prototype.set_index = function(index) {
+    this.index = index;
 }
 
 
@@ -76,10 +82,12 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
 
     var bulk_body = [];
     data.forEach(elem => {
+        // console.log(elem.url);
         bulk_body.push({
             index: {
                 _index: index,
-                _type: type
+                _type: type,
+                _id: elem.url
             }
         });
         bulk_body.push(elem);
@@ -106,54 +114,40 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
 }
 
 
-
-ElasticSearch.prototype.get_query_criteria = function() {
-
+ElasticSearch.prototype.query_criteria = function(query_text) {
+    
     return {
         size: 10,
         from: 0,
         query: {
-            match: {
-                //abstract: {
-                //    query: query_text,
-                //    minimum_should_match: this.min_match,
-                //    fuzziness: this.fuzziness
-                //},
-                abstract: {
-                    query: query_text
-                }
+            multi_match: {
+                query: query_text,
+                type: 'best_fields',
+                fields: [
+                    'title^3',
+                    'abstract^2',
+                    'introduction',
+                    'results',
+                    'discussion',
+                    'methods',
+                    'authors',
+                    'references',
+                    'subjects'
+                ]
             }
         }
     };
-
 
 }
 
 
 ElasticSearch.prototype.search = function(query_text) {
 
-    var body = {
-        size: 10,
-        from: 0,
-        query: {
-            match: {
-                //abstract: {
-                //    query: query_text,
-                //    minimum_should_match: this.min_match,
-                //    fuzziness: this.fuzziness
-                //},
-                abstract: {
-                    query: query_text
-                }
-            }
-        }
-    };
-
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.search({
-            index: 'science',
-            body: body
+            index: self.index,
+            body: self.query_criteria(query_text)
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var output = res.hits.hits.map(x => x._source);
