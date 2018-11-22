@@ -16,27 +16,48 @@ function parseSnippets(snippets) {
         for (var key in snippets) {
             var snip = snippets[key][i];
             if (snip != undefined) {
-                snippet.str += (snip + '... ');
+                snippet.str += (snip + '...');
                 if (++snippet.len >= snippet.MAX_LEN)
                     break;
             }
         }
     }
 
-    return snippet.str;
+    var str = snippet.str;
+    var repl = {
+        '<snip>': '<b>',
+        '</snip>': '</b>'
+    };
+    for (var r in repl) {
+        str = str.replace(new RegExp(r, 'g'), repl[r]);
+    }
+
+    return str;
+
+}
+
+
+function generateResult(title, snippet, url) {
+
+    return `<div class="result-wrapper">
+      <div class="result-title-wrapper">
+        <a class="result-title" href="${url}"> ${title} </a>
+      </div>
+      <div class="result-url"> ${url} </div>
+      <div class="result-snippet"> ${snippet} </div>
+      <div class="result-similar-wrapper">
+        <a class="result-similar" href="/similar"> find similar </a>
+      </div>
+    </div>`;
 
 }
 
 
 function displayResults(data) {
-    data.forEach(function(elem) {
+    data.forEach(function(elem, index) {
         var snippets = parseSnippets(elem.snippet);
-        var markup_template = 
-            `<div>
-                <h4> ${elem.result.title} </h4>
-                <span> ${snippets} </span>
-                <p> ${elem.result.url} </p>
-            </div>`;
+        var markup_template = generateResult(
+            elem.result.title, snippets, elem.result.url);
         $('.results-layout').append(markup_template);
 
     });
@@ -65,12 +86,25 @@ function initQuery() {
             success: function(data) {
                 clearResults();
                 displayResults(data);
+                findAlike();
             }
         });
 
     });
 
 };
+
+
+function findAlike() {
+
+    $('.result-similar').each(function(index, elem) {
+        $(elem).click(function(evnt) {
+            evnt.preventDefault();
+            console.log(this);
+        });
+    });
+
+}
 
 
 function enterTrigger() {
@@ -87,5 +121,6 @@ function enterTrigger() {
 $(document).ready(function() {
     enterTrigger();
     initQuery();
+    findAlike();
 });
 
