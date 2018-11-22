@@ -40,13 +40,13 @@ function parseSnippets(snippets) {
 function generateResult(title, snippet, url) {
 
     return `<div class="result-wrapper">
-      <div class="result-title-wrapper">
-        <a class="result-title" href="${url}"> ${title} </a>
+      <div class="result-title"> ${title} </div>
+      <div class="result-url-wrapper">
+        <a class="result-url" href="${url}"> ${url} </a>
       </div>
-      <div class="result-url"> ${url} </div>
       <div class="result-snippet"> ${snippet} </div>
       <div class="result-similar-wrapper">
-        <a class="result-similar" href="/similar"> find similar </a>
+        <a class="result-similar" href="/similarity"> find similar </a>
       </div>
     </div>`;
 
@@ -59,7 +59,7 @@ function displayResults(data) {
         var markup_template = generateResult(
             elem.result.title, snippets, elem.result.url);
         $('.results-layout').append(markup_template);
-
+        $('.results-layout').append('<div>&nbsp;</div>')
     });
 }
 
@@ -86,7 +86,7 @@ function initQuery() {
             success: function(data) {
                 clearResults();
                 displayResults(data);
-                findAlike();
+                findAlike(data);
             }
         });
 
@@ -95,16 +95,56 @@ function initQuery() {
 };
 
 
-function findAlike() {
+/*
+
+function findAlike(data) {
 
     $('.result-similar').each(function(index, elem) {
         $(elem).click(function(evnt) {
-            evnt.preventDefault();
-            console.log(this);
+            // evnt.preventDefault();
+            // console.log(data[index].result);
+
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify({ data: data[index].result }),
+                contentType: 'application/json',
+                url: '/similar',
+                success: function(data) {
+                    // TODO success function
+                    var title = data.map(x => x.title);
+                    console.log(title);
+                }
+            });
+
         });
     });
 
 }
+
+*/
+
+
+function findAlike(data) {
+
+    $('.result-similar').each(function(index, elem) {
+        $(elem).click(function(evnt) {
+            evnt.preventDefault();
+            // console.log(data[index].result);
+
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json',
+                url: '/similarity',
+                success: function() {
+                    console.log('similarity!');
+                }
+            });
+
+        });
+    });
+
+}
+
 
 
 function enterTrigger() {

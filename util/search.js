@@ -164,12 +164,50 @@ ElasticSearch.prototype.search = function(query_text) {
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(function(x) {
-
                     return {
                         result: x._source,
                         snippet: x.highlight
                     };
                 });
+                resolve(data);
+            } else {
+                resolve([]);
+            }
+        }, function(err) {
+            reject(err);
+        }).catch(console.error);
+    });
+
+}
+
+
+ElasticSearch.prototype.similar_criteria = function(query_result) {
+
+    var abstract = query_result.abstract;
+    return {
+        size: 100,
+        from: 1,
+        query: {
+            multi_match: {
+                query: abstract,
+                type: 'cross_fields'
+            }
+        }
+    };
+
+}
+
+
+ElasticSearch.prototype.similar = function(query_result) {
+
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        self.client.search({
+            index: self.index,
+            body: self.similar_criteria(query_result)
+        }).then(function(res) {
+            if (res.hits.total > 0) {
+                var data = res.hits.hits.map(x => x._source);
                 resolve(data);
             } else {
                 resolve([]);
