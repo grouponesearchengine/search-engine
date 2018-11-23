@@ -63,6 +63,8 @@ function displayResults(data) {
 }
 
 
+/*
+
 // this doesn't work well
 function generateNavigation() {
     
@@ -83,6 +85,8 @@ function generateNavigation() {
     }
 
 }
+
+*/
 
 
 function clearResults() {
@@ -111,8 +115,10 @@ function queryResults(query_text, from, size) {
             displayResults(data);
             
             // TODO find a better way to do this
-            generateNavigation();
+            // generateNavigation();
             // navigateResults();
+            navigateResults();
+
             
             findAlike(data);
         }
@@ -140,13 +146,13 @@ function navigateResults() {
 
     var len = 10;
     var query_text = window.localStorage.getItem('query');
-    $('.directory-num').forEach(function(elem, index) {
-        if (query_text != undefined) {
-            $(elem).click(function(evnt) {
-                evnt.preventDefault();
+    $('.directory-button').each(function(index, elem) {
+        $(elem).click(function(evnt) {
+            evnt.preventDefault();
+            if (query_text != undefined) {
                 queryResults(query_text, len*index, len);
-            });
-        }
+            }
+        });
     });
 
 }
