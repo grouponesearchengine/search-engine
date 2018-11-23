@@ -128,7 +128,7 @@ function findAlike(data) {
 
     $('.result-similar').each(function(index, elem) {
         $(elem).click(function(evnt) {
-            evnt.preventDefault();
+            // evnt.preventDefault();
             // console.log(data[index].result);
 
             $.ajax({
@@ -158,9 +158,16 @@ function enterTrigger() {
 }
 
 
-$(document).ready(function() {
+//$(document).ready(function() {
+//    enterTrigger();
+//    initQuery();
+//    findAlike();
+//});
+
+
+$(window).on('load', function() {
     enterTrigger();
     initQuery();
     findAlike();
-});
+})
 

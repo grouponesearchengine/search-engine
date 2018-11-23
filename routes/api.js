@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 
 
 var ElasticSearch = require('../util/search');
@@ -28,10 +29,26 @@ router.post('/search', function(req, res) {
 
 
 router.get('/similarity', function(req, res) {
-    //res.sendFile(__dirname+'/../views/similarity.html');
-    //res.redirect('views/similarity.html');
-    res.sendFile('views/similarity.html', {'root': __dirname+'/../public'});
+    // res.sendFile('views/similarity.html', {'root': __dirname+'/../public'});
+
+    // res.sendFile(path.join(__dirname, '../public', 'views/similarity.html'));
+    // res.sendFile('views/similarity.html');
+    // res.redirect('/similarity.html');
+    // res.redirect('views/similarity.html');
+
+    // res.redirect('views/similarity.html');
+    res.sendFile('/similarity.html', {
+        root: __dirname + '/../public/views'
+    });
+    
 });
+
+
+//router.post('/similarity', function(req, res) {
+//    console.log('post /similarity!');
+//    return res.sendStatus(200);
+//});
+
 
 
 /*
