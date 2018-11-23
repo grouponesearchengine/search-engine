@@ -1,10 +1,5 @@
 
 
-var KEYS = Object.freeze({
-    ENTER: 13,
-});
-
-
 function parseSnippets(snippets) {
 
     var snippet = {
@@ -97,10 +92,21 @@ function initQuery() {
 
 function findAlike(data) {
 
+    //var articles = window.localStorage.getItem('articles');
+    //if (articles != undefined) {
+    //    console.log(articles);
+    //} else {
+    //    console.log('no articles stored');
+    //}
+
+
     $('.result-similar').each(function(index, elem) {
         $(elem).click(function(evnt) {
             evnt.preventDefault();
+            window.localStorage.setItem('article', JSON.stringify(data[index].result));
+            window.location.href = '/similarity';
             
+            /*
 
             $.ajax({
                 type: 'POST',
@@ -108,12 +114,13 @@ function findAlike(data) {
                 contentType: 'application/json',
                 url: '/similarity',
                 success: function(res) {
-                    
                     var title = res.map(x => x.title);
-                    console.log(title);
-
+                    window.location.href = '/similarity';
+                    window.localStorage.setItem('articles', title);
                 }
             });
+
+            */
 
         });
     });
@@ -121,8 +128,12 @@ function findAlike(data) {
 }
 
 
-
 function enterTrigger() {
+
+    var KEYS = Object.freeze({
+        ENTER: 13,
+    });
+
     var input = document.getElementById('responsive-input');
     if (input) {
         input.addEventListener('keyup', function(evnt) {
