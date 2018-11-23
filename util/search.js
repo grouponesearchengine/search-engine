@@ -114,11 +114,9 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
 }
 
 
-ElasticSearch.prototype.query_criteria = function(query_text) {
+ElasticSearch.prototype.query_criteria = function(query_text, from, size) {
     
     return {
-        size: 10,
-        from: 0,
         query: {
             multi_match: {
                 query: query_text,
@@ -148,19 +146,22 @@ ElasticSearch.prototype.query_criteria = function(query_text) {
                 methods: {},
                 //'*': {}
             }
-        }
+        },
+        from: from,
+        size: size,
     };
 
 }
 
 
-ElasticSearch.prototype.search = function(query_text) {
+ElasticSearch.prototype.search = function(query_text, from, size) {
 
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.search({
             index: self.index,
-            body: self.query_criteria(query_text)
+            body: self.query_criteria(
+                query_text, from, size)
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(function(x) {

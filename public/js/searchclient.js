@@ -1,3 +1,7 @@
+/**
+ *  client-side query handling
+ * 
+ */
 
 
 function parseSnippets(snippets) {
@@ -59,69 +63,102 @@ function displayResults(data) {
 }
 
 
+// this doesn't work well
+function generateNavigation() {
+    
+    clearNavigation();
+    var query_text = window.localStorage.getItem('query');
+    var len = 10;
+    for (var i = 0; i < 10; ++i) {
+        var index = i+1;
+        var navigation_markup = 
+          `<span id="${index}" class="directory-num-wrapper">
+            <a class="directory-num" href="/"> ${index} </a>
+          </span>`;
+        $('.directory-bar').append(navigation_markup);
+        $('.directory-num').click(function(evnt) {
+            evnt.preventDefault();
+            queryResults(query_text, len*i, len);
+        });
+    }
+
+}
+
+
 function clearResults() {
     $('.results-layout').empty();
 }
 
 
-function initQuery() {
+function clearNavigation() {
+    $('.directory-bar').empty();
+}
+
+
+function queryResults(query_text, from, size) {
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify({
+            text: query_text,
+            from: from,
+            size: size
+        }),
+        contentType: 'application/json',
+        url: '/search',
+        success: function(data) {
+            
+            clearResults();
+            displayResults(data);
+            
+            // TODO find a better way to do this
+            generateNavigation();
+            // navigateResults();
+            
+            findAlike(data);
+        }
+    });
+}
+
+
+function sendQuery() {
 
     $('.query-search-button').click(function(evnt) {
         evnt.preventDefault();
-        
+
         var query_text = $('.query-text').val();
         if (!query_text.trim()) 
             return;
-
-        $.ajax({
-            type: 'POST',
-            data: JSON.stringify({ text: query_text }),
-            contentType: 'application/json',
-            url: '/search',
-            success: function(data) {
-                clearResults();
-                displayResults(data);
-                findAlike(data);
-            }
-        });
-
+        
+        window.localStorage.setItem('query', query_text);
+        queryResults(query_text, 0, 10);
     });
 
 };
 
 
+function navigateResults() {
+
+    var len = 10;
+    var query_text = window.localStorage.getItem('query');
+    $('.directory-num').forEach(function(elem, index) {
+        if (query_text != undefined) {
+            $(elem).click(function(evnt) {
+                evnt.preventDefault();
+                queryResults(query_text, len*index, len);
+            });
+        }
+    });
+
+}
+
+
 function findAlike(data) {
-
-    //var articles = window.localStorage.getItem('articles');
-    //if (articles != undefined) {
-    //    console.log(articles);
-    //} else {
-    //    console.log('no articles stored');
-    //}
-
 
     $('.result-similar').each(function(index, elem) {
         $(elem).click(function(evnt) {
             evnt.preventDefault();
             window.localStorage.setItem('article', JSON.stringify(data[index].result));
             window.location.href = '/similarity';
-            
-            /*
-
-            $.ajax({
-                type: 'POST',
-                data: JSON.stringify({ data: data[index].result }),
-                contentType: 'application/json',
-                url: '/similarity',
-                success: function(res) {
-                    var title = res.map(x => x.title);
-                    window.location.href = '/similarity';
-                    window.localStorage.setItem('articles', title);
-                }
-            });
-
-            */
-
         });
     });
 
@@ -148,7 +185,8 @@ function enterTrigger() {
 
 $(window).on('load', function() {
     enterTrigger();
-    initQuery();
+    sendQuery();
+    // navigateResults();
     findAlike();
 });
 

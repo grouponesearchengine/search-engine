@@ -5,7 +5,6 @@ var router = express.Router();
 
 var ElasticSearch = require('../util/search');
 var elasticsearch = new ElasticSearch();
-var articleSimilarity = null;
 
 // uncomment to load data into repo
 // elasticsearch.bulk_index_repo('repository/', 'science', 'articles');
@@ -17,8 +16,11 @@ router.get('/', function(req, res) {
 
 router.post('/search', function(req, res) {
 
-    var query_text = req.body.text;
-    elasticsearch.search(query_text)
+    var query = req.body.text;
+    var from = req.body.from;
+    var size = req.body.size;
+
+    elasticsearch.search(query, from, size)
         .then(function(data) {
             res.send(data);
         })
@@ -28,7 +30,6 @@ router.post('/search', function(req, res) {
 
 
 router.get('/similarity', function(req, res) {
-
     res.sendFile('/similarity.html', {
         root: __dirname + '/../public/views'
     });
