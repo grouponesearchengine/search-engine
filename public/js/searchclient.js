@@ -95,48 +95,23 @@ function initQuery() {
 };
 
 
-/*
-
 function findAlike(data) {
 
     $('.result-similar').each(function(index, elem) {
         $(elem).click(function(evnt) {
-            // evnt.preventDefault();
-            // console.log(data[index].result);
+            evnt.preventDefault();
+            
 
             $.ajax({
                 type: 'POST',
                 data: JSON.stringify({ data: data[index].result }),
                 contentType: 'application/json',
-                url: '/similar',
-                success: function(data) {
-                    // TODO success function
-                    var title = data.map(x => x.title);
-                    console.log(title);
-                }
-            });
-
-        });
-    });
-
-}
-
-*/
-
-
-function findAlike(data) {
-
-    $('.result-similar').each(function(index, elem) {
-        $(elem).click(function(evnt) {
-            // evnt.preventDefault();
-            // console.log(data[index].result);
-
-            $.ajax({
-                type: 'GET',
-                contentType: 'application/json',
                 url: '/similarity',
-                success: function() {
-                    console.log('similarity!');
+                success: function(res) {
+                    
+                    var title = res.map(x => x.title);
+                    console.log(title);
+
                 }
             });
 
@@ -149,25 +124,20 @@ function findAlike(data) {
 
 function enterTrigger() {
     var input = document.getElementById('responsive-input');
-    input.addEventListener('keyup', function(evnt) {
-        evnt.preventDefault();
-        if (evnt.keyCode == KEYS.ENTER) {
-            document.getElementById('clickable-button').click();
-        }
-    });
+    if (input) {
+        input.addEventListener('keyup', function(evnt) {
+            evnt.preventDefault();
+            if (evnt.keyCode == KEYS.ENTER) {
+                document.getElementById('clickable-button').click();
+            }
+        });
+    }
 }
-
-
-//$(document).ready(function() {
-//    enterTrigger();
-//    initQuery();
-//    findAlike();
-//});
 
 
 $(window).on('load', function() {
     enterTrigger();
     initQuery();
     findAlike();
-})
+});
 
