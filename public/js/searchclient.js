@@ -63,32 +63,6 @@ function displayResults(data) {
 }
 
 
-/*
-
-// this doesn't work well
-function generateNavigation() {
-    
-    clearNavigation();
-    var query_text = window.localStorage.getItem('query');
-    var len = 10;
-    for (var i = 0; i < 10; ++i) {
-        var index = i+1;
-        var navigation_markup = 
-          `<span id="${index}" class="directory-num-wrapper">
-            <a class="directory-num" href="/"> ${index} </a>
-          </span>`;
-        $('.directory-bar').append(navigation_markup);
-        $('.directory-num').click(function(evnt) {
-            evnt.preventDefault();
-            queryResults(query_text, len*i, len);
-        });
-    }
-
-}
-
-*/
-
-
 function clearResults() {
     $('.results-layout').empty();
 }
@@ -110,16 +84,9 @@ function queryResults(query_text, from, size) {
         contentType: 'application/json',
         url: '/search',
         success: function(data) {
-            
             clearResults();
             displayResults(data);
-            
-            // TODO find a better way to do this
-            // generateNavigation();
-            // navigateResults();
             navigateResults();
-
-            
             findAlike(data);
         }
     });
@@ -171,28 +138,23 @@ function findAlike(data) {
 }
 
 
-function enterTrigger() {
-
-    var KEYS = Object.freeze({
-        ENTER: 13,
+function advancedRedirect() {
+    $('.query-advanced-search').click(function(evnt) {
+        evnt.preventDefault();
+        var query_text = $('.query-text').val();
+        if (query_text) {
+            window.localStorage.setItem('query', query_text);
+        }
+        window.location.href = "/advanced";
     });
-
-    var input = document.getElementById('responsive-input');
-    if (input) {
-        input.addEventListener('keyup', function(evnt) {
-            evnt.preventDefault();
-            if (evnt.keyCode == KEYS.ENTER) {
-                document.getElementById('clickable-button').click();
-            }
-        });
-    }
 }
 
 
 $(window).on('load', function() {
+    // reloadQueries();
     enterTrigger();
+    advancedRedirect();
     sendQuery();
-    // navigateResults();
     findAlike();
 });
 

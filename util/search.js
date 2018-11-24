@@ -182,6 +182,37 @@ ElasticSearch.prototype.search = function(query_text, from, size) {
 }
 
 
+ElasticSearch.prototype.advanced_query = function(query, from, size) {
+    
+}
+
+
+ElasticSearch.prototype.advanced = function(query) {
+
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        self.client.search({
+            index: self.index,
+            body: self.advanced_query(query)
+        }).then(function(res) {
+            if (res.hits.total > 0) {
+                var data = res.hits.hits.map(function(x) {
+                    return {
+                        result: x._source
+                    };
+                });
+                resolve(data);
+            } else {
+                resolve([]);
+            }
+        }, function(err) {
+            reject(err);
+        }).catch(console.error);
+    });
+
+}
+
+
 ElasticSearch.prototype.similar_criteria = function(query_result) {
 
     var abstract = query_result.abstract;

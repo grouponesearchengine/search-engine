@@ -29,6 +29,20 @@ router.post('/search', function(req, res) {
 });
 
 
+router.get('/advanced', function(req, res) {
+    res.sendFile('/advanced.html', {
+        root:__dirname + '/../public/views'
+    });
+});
+
+
+router.post('/advanced', function(req, res) {
+
+    console.log(req.body);
+
+});
+
+
 router.get('/similarity', function(req, res) {
     res.sendFile('/similarity.html', {
         root: __dirname + '/../public/views'
