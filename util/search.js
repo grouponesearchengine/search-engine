@@ -183,65 +183,39 @@ ElasticSearch.prototype.search = function(query_text, from, size) {
 
 ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
 
-    /*
-
-    var query = this.query_criteria(req.query, from, size);
-    if (!req.query) {
-        delete query.query.multi_match;
+    var match = [];
+    for (var i in req) {
+        if (req.hasOwnProperty(i)) {
+            if (i != 'query') {
+                match.push({
+                    match: {
+                        [i]: req[i]
+                    }
+                });
+            }
+        }
     }
 
-    delete query.query.multi_match;
-    
-    query.query.multi_match = {};
-    if (req.subjects)
-        query.query.match.subjects = req.subjects;
-    if (req.authors)
-        query.query.match.authors = req.authors;
-    if (req.date)
-        query.query.match.date = req.date;
-
-    console.log(query);
-
-    return query;
-
-    */
-
+    match.push({
+        multi_match: {
+            query: req.query,
+            type: 'best_fields',
+            fields: [
+                'title',
+                'abstract',
+                'introduction',
+                'results',
+                'discussion',
+                'methods',
+                'references',
+            ]
+        }
+    });
 
     return {
         query: {
             bool: {
-                should: [
-                    {
-                        match: {
-                            subjects: req.subjects
-                        }
-                    }, 
-                    {
-                        match: {
-                            authors: req.authors
-                        }
-                    },
-                    {
-                        match: {
-                            date: req.date
-                        }
-                    },
-                    {
-                        multi_match: {
-                            query: req.query,
-                            type: 'best_fields',
-                            fields: [
-                                'title^3',
-                                'abstract^2',
-                                'introduction',
-                                'results',
-                                'discussion',
-                                'methods',
-                                'references',
-                            ]
-                        }
-                    }
-                ]
+                should: match
             }
         },
         from: from,
