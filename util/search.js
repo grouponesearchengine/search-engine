@@ -52,11 +52,6 @@ ElasticSearch.prototype.set_fuzziness = function(fuzziness) {
 }
 
 
-ElasticSearch.prototype.set_match_categories = function(categories) {
-    
-}
-
-
 ElasticSearch.prototype.bulk_index_repo = async function(repo, index, type) {
 
     var self = this;
@@ -82,7 +77,6 @@ ElasticSearch.prototype.bulk_index = async function(path, index, type) {
 
     var bulk_body = [];
     data.forEach(elem => {
-        // console.log(elem.url);
         bulk_body.push({
             index: {
                 _index: index,
@@ -218,6 +212,22 @@ ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
                 should: match
             }
         },
+        highlight: {
+            order: 'score',
+            pre_tags: ['<snip>'],
+            post_tags: ['</snip>'],
+            fields: {
+                abstract: {},
+                discussion: {},
+                introduction: {},
+                results: {},
+                methods: {},
+                date: {},
+                authors: {},
+                subjects: {}
+
+            }
+        },
         from: from,
         size: size
     };
@@ -236,7 +246,8 @@ ElasticSearch.prototype.advanced = function(query) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(function(x) {
                     return {
-                        result: x._source
+                        result: x._source,
+                        snippet: x.highlight
                     };
                 });
                 resolve(data);

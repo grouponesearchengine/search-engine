@@ -100,8 +100,8 @@ function sendQuery() {
 
         var query_text = $('.query-text').val();
         if (!query_text.trim()) 
-            return;
-        
+            return errorMessageClass('results-layout');
+            
         window.localStorage.setItem('query', query_text);
         queryResults(query_text, 0, 10);
     });
@@ -152,7 +152,7 @@ function advancedRedirect() {
 
 $(window).on('load', function() {
     // reloadQueries();
-    enterTrigger();
+    initEnterTrigger();
     advancedRedirect();
     sendQuery();
     findAlike();
