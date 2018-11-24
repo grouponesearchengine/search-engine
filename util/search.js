@@ -143,8 +143,7 @@ ElasticSearch.prototype.query_criteria = function(query_text, from, size) {
                 discussion: {},
                 introduction: {},
                 results: {},
-                methods: {},
-                //'*': {}
+                methods: {}
             }
         },
         from: from,
@@ -182,8 +181,73 @@ ElasticSearch.prototype.search = function(query_text, from, size) {
 }
 
 
-ElasticSearch.prototype.advanced_query = function(query, from, size) {
+ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
+
+    /*
+
+    var query = this.query_criteria(req.query, from, size);
+    if (!req.query) {
+        delete query.query.multi_match;
+    }
+
+    delete query.query.multi_match;
     
+    query.query.multi_match = {};
+    if (req.subjects)
+        query.query.match.subjects = req.subjects;
+    if (req.authors)
+        query.query.match.authors = req.authors;
+    if (req.date)
+        query.query.match.date = req.date;
+
+    console.log(query);
+
+    return query;
+
+    */
+
+
+    return {
+        query: {
+            bool: {
+                should: [
+                    {
+                        match: {
+                            subjects: req.subjects
+                        }
+                    }, 
+                    {
+                        match: {
+                            authors: req.authors
+                        }
+                    },
+                    {
+                        match: {
+                            date: req.date
+                        }
+                    },
+                    {
+                        multi_match: {
+                            query: req.query,
+                            type: 'best_fields',
+                            fields: [
+                                'title^3',
+                                'abstract^2',
+                                'introduction',
+                                'results',
+                                'discussion',
+                                'methods',
+                                'references',
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        from: from,
+        size: size
+    };
+
 }
 
 
@@ -193,7 +257,7 @@ ElasticSearch.prototype.advanced = function(query) {
     return new Promise(function(resolve, reject) {
         self.client.search({
             index: self.index,
-            body: self.advanced_query(query)
+            body: self.advanced_criteria(query, 0, 10)
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(function(x) {

@@ -15,7 +15,7 @@ function fillQuery() {
 function appendEntry(obj, key, value) {
     if (!value.trim())
         return false;
-    obj[key] = value;
+    obj[key] = value.trim();
     return true;
 }
 
@@ -26,11 +26,12 @@ function sendAdvancedQuery() {
 
         var query = {};
         appendEntry(query, 'query', $('.advanced-text-query').val());
-        appendEntry(query, 'categories', $('.advanced-text-categories').val());
+        appendEntry(query, 'subjects', $('.advanced-text-subjects').val());
         appendEntry(query, 'authors', $('.advanced-text-authors').val());
-        appendEntry(query, 'years', $('.advanced-text-years').val());
+        appendEntry(query, 'date', $('.advanced-text-date').val());
 
-        if (!(query.query || query.categories || query.authors || query.years)) {
+        if (!(query.query || query.subjects || query.authors || query.date)) {
+            // console.log('empty query');
             return;
         }
         
@@ -42,9 +43,8 @@ function sendAdvancedQuery() {
             success: function(data) {
                 console.log(data);
             }
-        })
+        });
 
-        
     });
 }
 

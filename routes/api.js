@@ -38,7 +38,12 @@ router.get('/advanced', function(req, res) {
 
 router.post('/advanced', function(req, res) {
 
-    console.log(req.body);
+    var query = req.body;
+    elasticsearch.advanced(query)
+        .then(function(data) {
+            res.send(data);
+        })
+        .catch(console.error);
 
 });
 
