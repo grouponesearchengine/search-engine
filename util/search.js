@@ -177,6 +177,8 @@ ElasticSearch.prototype.search = function(query_text, from, size) {
 
 ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
 
+    // console.log(req);
+
     var match = [];
     for (var i in req) {
         if (req.hasOwnProperty(i)) {
@@ -235,13 +237,15 @@ ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
 }
 
 
-ElasticSearch.prototype.advanced = function(query) {
+ElasticSearch.prototype.advanced = function(req) {
+
+    // console.log(req);
 
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.search({
             index: self.index,
-            body: self.advanced_criteria(query, 0, 10)
+            body: self.advanced_criteria(req.query.body, req.from, req.size)
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(function(x) {

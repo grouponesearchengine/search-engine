@@ -68,9 +68,9 @@ function clearResults() {
 }
 
 
-function clearNavigation() {
-    $('.directory-bar').empty();
-}
+//function clearNavigation() {
+//    $('.directory-bar').empty();
+//}
 
 
 function queryResults(query_text, from, size) {
@@ -86,6 +86,7 @@ function queryResults(query_text, from, size) {
         success: function(data) {
             clearResults();
             displayResults(data);
+            addDirectory('/');
             navigateResults();
             findAlike(data);
         }
@@ -99,8 +100,8 @@ function sendQuery() {
         evnt.preventDefault();
 
         var query_text = $('.query-text').val();
-        if (!query_text.trim()) 
-            return errorMessageClass('results-layout');
+        if (!query_text.trim()) return;
+            // return errorMessageClass('results-layout');
             
         window.localStorage.setItem('query', query_text);
         queryResults(query_text, 0, 10);

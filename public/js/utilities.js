@@ -11,13 +11,15 @@ function initEnterTrigger() {
     });
 
     var input = document.getElementById('responsive-input');
-    while (input.id === 'responsive-input') {
-        input.addEventListener('keyup', function(evnt) {
-            evnt.preventDefault();
-            if (evnt.keyCode === KEYS.ENTER) {
-                document.getElementById('clickable-button').click();
-            }
-        });
+    while (input != undefined) {
+        if (input.id === 'responsive-input') {
+            input.addEventListener('keyup', function(evnt) {
+                evnt.preventDefault();
+                if (evnt.keyCode === KEYS.ENTER) {
+                    document.getElementById('clickable-button').click();
+                }
+            });
+        }
         input = input.nextElementSibling;
     }
 
@@ -42,4 +44,30 @@ function errorMessageClass(tag) {
     return false;
 }
 
+
+function emptyDirectory() {
+    $('.directory-hook').empty();
+}
+
+
+function addDirectory(url) {
+    var directory = `<div class="directory-wrapper row">
+      <div class="col"></div>
+      <div class="directory-bar col-8 d-flex justify-content-around">
+        <a class="directory-button" href="${url}"> 1 </a>
+        <a class="directory-button" href="${url}"> 2 </a>
+        <a class="directory-button" href="${url}"> 3 </a>
+        <a class="directory-button" href="${url}"> 4 </a>
+        <a class="directory-button" href="${url}"> 5 </a>
+        <a class="directory-button" href="${url}"> 6 </a>
+        <a class="directory-button" href="${url}"> 7 </a>
+        <a class="directory-button" href="${url}"> 8 </a>
+        <a class="directory-button" href="${url}"> 9 </a>
+        <a class="directory-button" href="${url}"> 10 </a>
+      </div>
+      <div class="col"></div>
+    </div>`;
+    emptyDirectory();
+    $('.directory-hook').append(directory);
+}
 

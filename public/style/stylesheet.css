@@ -8,7 +8,14 @@ input[type="text"], textarea {
 
 .query-logo {
     position: relative;
-    top: 8px;
+    top: 6px;
+    font-family: 'Courier New', Courier, monospace
+}
+
+
+.advanced-query-logo {
+    position: relative;
+    text-align: center !important;
     font-family: 'Courier New', Courier, monospace
 }
 

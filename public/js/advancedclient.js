@@ -25,7 +25,7 @@ function appendEntry(obj, key, value) {
 
 function generateResult(title, text, url, subject, author, date) {
     return `<div class="advanced-result-wrapper">
-      <div class="advanced-title"> ${title} </div>
+      <h5 class="advanced-title"> ${title} </h5>
       <div class="advanced-url-wrapper">
         <a class="advanced-url" href="${url}"> ${url} </a>
       </div>
@@ -49,29 +49,66 @@ function displayResults(data) {
 }
 
 
+function navigateResults() {
+
+    var req = {
+        body: JSON.parse(window.localStorage.getItem('advanced_query'))
+    };
+    var len = 10;
+    $('.directory-button').each(function(index, elem) {
+        $(elem).click(function(evnt) {
+            evnt.preventDefault();
+            if (req != undefined) {
+                advancedQueryResult(req, len*index, len);
+            }
+        });
+    });
+
+}
+
+
+function advancedQueryResult(req, from, size) {
+    $.ajax({
+        type: 'POST',
+        data: JSON.stringify({
+            query: req,
+            from: from,
+            size: size
+        }),
+        contentType: 'application/json',
+        url: '/advanced',
+        success: function(data) {
+            clearResults();
+            displayResults(data);
+            addDirectory('/advanced');
+            navigateResults();
+        }
+    });
+}
+
+
+
+
 function sendAdvancedQuery() {
     $('.advanced-search-button').click(function(evnt) {
         evnt.preventDefault();
 
-        var query = {};
-        appendEntry(query, 'query', $('.advanced-text-query').val());
-        appendEntry(query, 'subjects', $('.advanced-text-subjects').val());
-        appendEntry(query, 'authors', $('.advanced-text-authors').val());
-        appendEntry(query, 'date', $('.advanced-text-date').val());
+        var query = {
+            body: {}
+        };
+        appendEntry(query.body, 'query', $('.advanced-text-query').val());
+        appendEntry(query.body, 'subjects', $('.advanced-text-subjects').val());
+        appendEntry(query.body, 'authors', $('.advanced-text-authors').val());
+        appendEntry(query.body, 'date', $('.advanced-text-date').val());
 
-        if (!(query.query || query.subjects || query.authors || query.date))
-            return errorMessageClass('advanced-results');
-        
-        $.ajax({
-            type: 'POST',
-            data: JSON.stringify(query),
-            contentType: 'application/json',
-            url: '/advanced',
-            success: function(data) {
-                clearResults();
-                displayResults(data);
-            }
-        });
+        if (!(query.body.query || 
+            query.body.subjects || 
+            query.body.authors || 
+            query.body.date)) 
+                return;
+
+        window.localStorage.setItem('advanced_query', JSON.stringify(query.body));
+        advancedQueryResult(query, 0, 10);
 
     });
 }

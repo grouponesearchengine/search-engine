@@ -18,33 +18,51 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="../style/stylesheet.css" />
 
-
   </head>
   <body>
 
       <div class="search-engine">
         <div class="advanced-wrapper container">
           
+          <div>&nbsp;</div><div>&nbsp;</div>
 
           <div class="advanced-search">
             <div class="advanced-bar">
-              <div class="row" id="responsive-input">
+
+              
+              <div class="advanced-query-logo-wrapper row">
+                <h4 class="advanced-query-logo"> entropi </h4>
+              </div>
+
+              <div class="row mt-2 mb-2" id="responsive-input">
                 <input class="advanced-text-query form-control col"  type="text" placeholder="Enter search..." >
               </div>
-              <div class="row" id="responsive-input">
-                <input class="advanced-text-subjects form-control col" type="text" placeholder="Subjects" >
-                <input class="advanced-text-authors form-control col" type="text" placeholder="Authors" >
-                <input class="advanced-text-date form-control col" type="text" placeholder="Date" >
+              
+              <div class="row">
+                <small id="emailHelp" class="form-text text-muted"> Filter results by criteria. </small>
               </div>
-              <input class="advanced-search-button row btn" id="clickable-button" type="submit" value="Advanced Search" name="AdvancedSearch">
+              
+              <div class="row" id="responsive-input">
+                <input class="advanced-text-subjects form-control mr-2 col" type="text" placeholder="Subjects" >
+                <input class="advanced-text-authors form-control mr-2 ml-2 col" type="text" placeholder="Authors" >
+                <input class="advanced-text-date form-control ml-2 col" type="text" placeholder="Date" >
+              </div>
+              
+              <input class="advanced-search-button row btn mt-4 float-right" id="clickable-button" type="submit" value="Advanced Search" name="AdvancedSearch">
             </div>
           </div>
 
+          <div>&nbsp;</div> <div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div>
 
-          <div class="advanced-results-wrapper">
-            <div class="advanced-results"></div>
+          <div class="advanced-results-row-wrapper row">
+            <div class="col"></div>
+            <div class="advanced-results-wrapper col-8">
+              <div class="advanced-results"></div>
+            </div>
+            <div class="col"></div>
           </div>
 
+          <div class="directory-hook"></div>
 
         </div>
       </div>
