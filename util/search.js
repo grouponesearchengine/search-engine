@@ -268,8 +268,8 @@ ElasticSearch.prototype.similar_criteria = function(query_result) {
 
     var abstract = query_result.abstract;
     return {
-        size: 100,
-        from: 1,
+        size: 101,
+        from: 0,
         query: {
             multi_match: {
                 query: abstract,
