@@ -31,6 +31,8 @@ function displayArticles(data) {
 function loadSimilar() {
 
     var article = window.localStorage.getItem('article');
+    console.log('loadsimilar',article);
+    // return;
     if (article != null) {
         article = JSON.parse(article);
         

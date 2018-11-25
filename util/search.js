@@ -239,8 +239,6 @@ ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
 
 ElasticSearch.prototype.advanced = function(req) {
 
-    // console.log(req);
-
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.search({

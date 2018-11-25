@@ -29,7 +29,8 @@ function initEnterTrigger() {
 function reloadQueries() {
     $(window).on('beforeunload', function() {
         window.localStorage.setItem('query', '');
-        window.localStorage.setItem('article', '');
+        window.localStorage.setItem('advanced_query', '');
+    //    window.localStorage.setItem('article', '');
     });
 }
 
@@ -70,4 +71,18 @@ function addDirectory(url) {
     emptyDirectory();
     $('.directory-hook').append(directory);
 }
+
+
+function findAlike(data) {
+
+    $('.result-similar').each(function(index, elem) {
+        $(elem).click(function(evnt) {
+            evnt.preventDefault();
+            window.localStorage.setItem('article', JSON.stringify(data[index].result));
+            window.location.href = '/similarity';
+        });
+    });
+
+}
+
 

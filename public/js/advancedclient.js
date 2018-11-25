@@ -33,6 +33,9 @@ function generateResult(title, text, url, subject, author, date) {
       <div class="advanced-criteria"> ${subject} </div>
       <div class="advanced-author"> ${author} </div>
       <div class="advanced-date"> ${date} </div>
+      <div class="result-similar-wrapper">
+        <a class="result-similar" href="/similarity"> find similar </a>
+      </div>
     </div>`;
 }
 
@@ -82,6 +85,7 @@ function advancedQueryResult(req, from, size) {
             displayResults(data);
             addDirectory('/advanced');
             navigateResults();
+            findAlike(data);
         }
     });
 }
@@ -115,9 +119,9 @@ function sendAdvancedQuery() {
 
 
 $(window).on('load', function() {
+    reloadQueries();
     initEnterTrigger();
     fillQuery();
-    reloadQueries();
     sendAdvancedQuery();
 });
 
