@@ -39,7 +39,7 @@ function parseSnippets(snippets) {
 function generateResult(title, snippet, url) {
 
     return `<div class="result-wrapper">
-      <div class="result-title"> ${title} </div>
+      <h5 class="result-title"> ${title} </h5>
       <div class="result-url-wrapper">
         <a class="result-url" href="${url}"> ${url} </a>
       </div>

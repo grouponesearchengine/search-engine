@@ -10,32 +10,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="../js/utilities.js"></script>
     <script src="../js/advancedclient.js"></script>
 
     <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="../style/stylesheet.css" />
+
 
   </head>
   <body>
 
       <div class="search-engine">
-        
-        <div class="advanced-wrapper">
+        <div class="advanced-wrapper container">
+          
+
           <div class="advanced-search">
-            <div class=""></div>
             <div class="advanced-bar">
-              <input class="advanced-text-query" id="responsive-input" type="text" placeholder="Enter search..." >
-              <input class="advanced-text-subjects" id="responsive-input" type="text" placeholder="Subjects" >
-              <input class="advanced-text-authors" id="responsive-input" type="text" placeholder="Authors" >
-              <input class="advanced-text-date" id="responsive-input" type="text" placeholder="Date" >
-              <input class="advanced-search-button" id="clickable-button" type="submit" value="Advanced Search" name="AdvancedSearch">
+              <div class="row" id="responsive-input">
+                <input class="advanced-text-query form-control col"  type="text" placeholder="Enter search..." >
+              </div>
+              <div class="row" id="responsive-input">
+                <input class="advanced-text-subjects form-control col" type="text" placeholder="Subjects" >
+                <input class="advanced-text-authors form-control col" type="text" placeholder="Authors" >
+                <input class="advanced-text-date form-control col" type="text" placeholder="Date" >
+              </div>
+              <input class="advanced-search-button row btn" id="clickable-button" type="submit" value="Advanced Search" name="AdvancedSearch">
             </div>
           </div>
+
+
           <div class="advanced-results-wrapper">
             <div class="advanced-results"></div>
           </div>
+
+
         </div>
-        
       </div>
 
   </body>

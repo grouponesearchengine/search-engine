@@ -8,7 +8,7 @@ input[type="text"], textarea {
 
 .query-logo {
     position: relative;
-    top: 4px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    top: 8px;
+    font-family: 'Courier New', Courier, monospace
 }
 
