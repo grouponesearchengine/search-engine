@@ -23,32 +23,66 @@ function appendEntry(obj, key, value) {
 }
 
 
+function appendDescriptionList(criteria, elems) {
+    var description = criteria+': ';
+    for (var i = 0; i < elems.length; ++i) {
+        description += elems[i] +', '
+    }
+    return description.slice(0, -2);
+
+}
+
+
 function generateResult(title, text, url, subject, author, date) {
+
+    var subjects = appendDescriptionList('Subject', subject);
+    var authors = appendDescriptionList('Authors', author);
+
     return `<div class="advanced-result-wrapper">
-      <h5 class="advanced-title"> ${title} </h5>
-      <div class="advanced-url-wrapper">
+        <h5 class="advanced-title"> ${title} </h5>
+        <div class="advanced-url-wrapper">
         <a class="advanced-url" href="${url}"> ${url} </a>
-      </div>
-      <div class="advanced-snippet"> ${text} </div>
-      <div class="advanced-criteria"> ${subject} </div>
-      <div class="advanced-author"> ${author} </div>
-      <div class="advanced-date"> ${date} </div>
-      <div class="result-similar-wrapper">
-        <a class="result-similar" href="/similarity"> find similar </a>
-      </div>
-    </div>`;
+        </div>
+        <p class="advanced-snippet"> ${text} </p>        
+        <div class="advanced-criteria"> ${subjects} </div>
+        <div class="advanced-author"> ${authors} </div>
+        <div class="advanced-date"> ${date} </div>
+        <div class="result-similar-wrapper">
+          <a class="result-similar" href="/similarity"> find similar </a>
+        </div>
+      </div>`;
+
 }
 
 
 function displayResults(data) {
+
+    if (data.length == 0)
+        return noResults('advanced-results');
+
+    
+
     data.forEach(function(elem, index) {
+
+        var snippets = parseSnippets(elem.snippet);
+        if (snippets.length == 0)
+            snippets = emptySnippet();
+
         var markup_template = generateResult(
-            elem.result.title, elem.result.abstract,
-            elem.result.url, elem.result.subjects,
-            elem.result.authors, elem.result.date);
+            elem.result.title,
+            snippets,
+            elem.result.url, 
+            elem.result.subjects,
+            elem.result.authors, 
+            elem.result.date);
         $('.advanced-results').append(markup_template);
         $('.advanced-results').append('<div>&nbsp;</div>');
+        
     });
+
+    addDirectory('/advanced');
+    navigateResults();
+
 }
 
 
@@ -82,15 +116,15 @@ function advancedQueryResult(req, from, size) {
         url: '/advanced',
         success: function(data) {
             clearResults();
+            emptyDirectory();
             displayResults(data);
-            addDirectory('/advanced');
-            navigateResults();
             findAlike(data);
+        },
+        error: function() {
+            noResults('advanced-query');
         }
     });
 }
-
-
 
 
 function sendAdvancedQuery() {

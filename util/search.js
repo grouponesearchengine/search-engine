@@ -132,6 +132,7 @@ ElasticSearch.prototype.query_criteria = function(query_text, from, size) {
             order: 'score',
             pre_tags: ['<snip>'],
             post_tags: ['</snip>'],
+            fragment_size: 200,
             fields: {
                 abstract: {},
                 discussion: {},
@@ -192,21 +193,23 @@ ElasticSearch.prototype.advanced_criteria = function(req, from, size) {
         }
     }
 
-    match.push({
-        multi_match: {
-            query: req.query,
-            type: 'best_fields',
-            fields: [
-                'title',
-                'abstract',
-                'introduction',
-                'results',
-                'discussion',
-                'methods',
-                'references',
-            ]
-        }
-    });
+    if (req.query != null) {
+        match.push({
+            multi_match: {
+                query: req.query,
+                type: 'best_fields',
+                fields: [
+                    'title',
+                    'abstract',
+                    'introduction',
+                    'results',
+                    'discussion',
+                    'methods',
+                    'references',
+                ]
+            }
+        });
+    }
 
     return {
         query: {

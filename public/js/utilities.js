@@ -86,3 +86,53 @@ function findAlike(data) {
 }
 
 
+function noResults(tag) {
+    $('.'+tag).empty();
+    $('.'+tag).append(
+        '<div class="no-results">No results were found.</div>');
+    return false;
+}
+
+
+function parseSnippets(snippets) {
+
+    var topics = [
+        'discussion',
+        'results',
+        'introduction',
+        'methods',
+        'abstract',
+    ];
+
+    var snippet = '';
+    var snip_len = 0;
+    var MAX_LEN = 3;
+    for (var i = 0; i < topics.length && snip_len < MAX_LEN; ++i) {
+        var snip = snippets[topics[i]];
+        if (snip != undefined) {
+            for (var k = 0; k < snip.length; ++k) {
+                snippet += (snip[k].trim()+'... ');
+                if (++snip_len >= MAX_LEN) {
+                    break;
+                }
+            }
+        }
+    }
+
+    var repl = {
+        '<snip>': '<b>',
+        '</snip>': '</b>'
+    };
+    for (var r in repl) {
+        snippet = snippet.replace(new RegExp(r, 'g'), repl[r]);
+    }
+
+    return snippet.slice(0, -4);
+
+}
+
+
+function emptySnippet() {
+    return 'This result could not be displayed.'
+}
+

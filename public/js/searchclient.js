@@ -4,38 +4,6 @@
  */
 
 
-function parseSnippets(snippets) {
-
-    var snippet = {
-        str: '', len: 0,
-        MAX_LEN: 3, MAX_CAT: 5
-    };
-
-    for (var i = 0; i < snippet.MAX_CAT && snippet.len < snippet.MAX_LEN; ++i) {
-        for (var key in snippets) {
-            var snip = snippets[key][i];
-            if (snip != undefined) {
-                snippet.str += (snip + '...');
-                if (++snippet.len >= snippet.MAX_LEN)
-                    break;
-            }
-        }
-    }
-
-    var str = snippet.str;
-    var repl = {
-        '<snip>': '<b>',
-        '</snip>': '</b>'
-    };
-    for (var r in repl) {
-        str = str.replace(new RegExp(r, 'g'), repl[r]);
-    }
-
-    return str;
-
-}
-
-
 function generateResult(title, snippet, url) {
 
     return `<div class="result-wrapper">
@@ -53,13 +21,26 @@ function generateResult(title, snippet, url) {
 
 
 function displayResults(data) {
+
+    if (data.length == 0)
+        return noResults('results-layout');
+
     data.forEach(function(elem, index) {
+        
         var snippets = parseSnippets(elem.snippet);
+        if (snippets.length == 0)
+            snippets = emptySnippet();
+
         var markup_template = generateResult(
             elem.result.title, snippets, elem.result.url);
         $('.results-layout').append(markup_template);
         $('.results-layout').append('<div>&nbsp;</div>')
+
     });
+
+    addDirectory('/');
+    navigateResults();
+
 }
 
 
@@ -80,10 +61,12 @@ function queryResults(query_text, from, size) {
         url: '/search',
         success: function(data) {
             clearResults();
+            emptyDirectory();
             displayResults(data);
-            addDirectory('/');
-            navigateResults();
             findAlike(data);
+        },
+        error: function() {
+            noResults('results-layout');
         }
     });
 }
