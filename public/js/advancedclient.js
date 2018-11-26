@@ -60,14 +60,9 @@ function displayResults(data) {
     if (data.length == 0)
         return noResults('advanced-results');
 
-    
-
     data.forEach(function(elem, index) {
 
-        var snippets = parseSnippets(elem.snippet);
-        if (snippets.length == 0)
-            snippets = emptySnippet();
-
+        var snippets = generateSnippet(elem);
         var markup_template = generateResult(
             elem.result.title,
             snippets,
@@ -77,7 +72,7 @@ function displayResults(data) {
             elem.result.date);
         $('.advanced-results').append(markup_template);
         $('.advanced-results').append('<div>&nbsp;</div>');
-        
+
     });
 
     addDirectory('/advanced');

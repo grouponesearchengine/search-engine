@@ -26,11 +26,8 @@ function displayResults(data) {
         return noResults('results-layout');
 
     data.forEach(function(elem, index) {
-        
-        var snippets = parseSnippets(elem.snippet);
-        if (snippets.length == 0)
-            snippets = emptySnippet();
 
+        var snippets = generateSnippet(elem);
         var markup_template = generateResult(
             elem.result.title, snippets, elem.result.url);
         $('.results-layout').append(markup_template);

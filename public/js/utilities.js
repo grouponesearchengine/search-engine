@@ -132,6 +132,16 @@ function parseSnippets(snippets) {
 }
 
 
+function generateSnippet(elem) {
+    var snippets = emptySnippet();
+    if (elem.snippet)
+        snippets = parseSnippets(elem.snippet);
+    if (snippets.length == 0)
+        snippets = emptySnippet();
+    return snippets;
+}
+
+
 function emptySnippet() {
     return 'This result could not be displayed.'
 }
