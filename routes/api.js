@@ -58,7 +58,9 @@ router.get('/similarity', function(req, res) {
 router.post('/similarity', function(req, res) {
 
     var query_text = req.body.data;
-    elasticsearch.similar(query_text)
+    var from = req.body.from;
+    var size = req.body.size;
+    elasticsearch.similar(query_text, from, size)
         .then(function(data) {
             res.send(data);
         })

@@ -264,12 +264,12 @@ ElasticSearch.prototype.advanced = function(req) {
 }
 
 
-ElasticSearch.prototype.similar_criteria = function(query_result) {
+ElasticSearch.prototype.similar_criteria = function(query_result, from, size) {
 
     var abstract = query_result.abstract;
     return {
-        size: 101,
-        from: 0,
+        size: size,
+        from: from,
         query: {
             multi_match: {
                 query: abstract,
@@ -281,13 +281,13 @@ ElasticSearch.prototype.similar_criteria = function(query_result) {
 }
 
 
-ElasticSearch.prototype.similar = function(query_result) {
+ElasticSearch.prototype.similar = function(query_result, from, size) {
 
     var self = this;
     return new Promise(function(resolve, reject) {
         self.client.search({
             index: self.index,
-            body: self.similar_criteria(query_result)
+            body: self.similar_criteria(query_result, from, size)
         }).then(function(res) {
             if (res.hits.total > 0) {
                 var data = res.hits.hits.map(x => x._source);
