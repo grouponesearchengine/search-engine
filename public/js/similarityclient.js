@@ -72,10 +72,10 @@ function sizeCanvas() {
     //canvas.height = window.innerHeight;
     //canvas.width = window.innerWidth;
 
-    var canvas = document.getElementById('canvas');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    console.log(canvas);
+    //var canvas = document.getElementById('canvas');
+    //canvas.height = window.innerHeight;
+    //canvas.width = window.innerWidth;
+    //console.log(canvas);
 
 
 }
@@ -135,11 +135,12 @@ function generateNetworkTrivial() {
 function populateNetworkRecursive(queries, nodes, edges, iter) {
 
     var size = 5;
+    var dispersion = 10;
     $.ajax({
         type: 'POST',
         data: JSON.stringify({ 
             data: queries[iter],
-            from: 1,
+            from: iter*dispersion+1,
             size: size
         }),
         contentType: 'application/json',
@@ -148,7 +149,7 @@ function populateNetworkRecursive(queries, nodes, edges, iter) {
 
             var pnodes = [];
             var pedges = [];
-            for (var i = 0; i < size; ++i) {
+            for (var i = 0; i < size && i < data.length; ++i) {
                 pnodes.push({
                     id: size*iter+i+1,
                     title: data[i].title,
