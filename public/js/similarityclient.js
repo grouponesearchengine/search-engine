@@ -6,8 +6,8 @@
 
 
 var PALETTE = Object.freeze({
-    0: '#f6f1f4',
-    1: '#ffe0e7',
+    0: '#ffe0e7',
+    1: '#f6f1f4',
     2: '#d3f4ff',
     3: '#fef5dc',
     4: '#d2ffe1',
@@ -45,8 +45,6 @@ function displayArticles(data) {
 function loadSimilar() {
 
     var article = window.localStorage.getItem('article');
-    // console.log('loadsimilar',article);
-    // return;
     if (article != null) {
         article = JSON.parse(article);
         
@@ -66,68 +64,44 @@ function loadSimilar() {
 }
 
 
-function sizeCanvas() {
+function redirectIndex() {
+    $('.similarity-logo').click(function(evnt) {
+        evnt.preventDefault();
+        window.location.href = '/';
+    });
+}
 
-    //var canvas = $('#network canvas')[0];
-    //canvas.height = window.innerHeight;
-    //canvas.width = window.innerWidth;
 
-    //var canvas = document.getElementById('canvas');
-    //canvas.height = window.innerHeight;
-    //canvas.width = window.innerWidth;
-    //console.log(canvas);
+function resizeCanvas() {
 
+    $('canvas')
+        .width(window.innerWidth)
+        .height(window.innerHeight);
+    
+    $('#network')
+        .width(window.innerWidth)
+        .height(window.innerHeight);
 
 }
 
 
-function generateNetworkTrivial() {
-
-    var nodes = new vis.DataSet();
-    nodes.on('*', function (event, properties, senderId) {
-        console.log('event', event, properties);
+function createCanvas() {
+    
+    var canvas = $('<canvas/>', {
+        id: 'network-canvas'
+    }).prop({
+        width: window.innerWidth,
+        height: window.innerHeight
     });
-    nodes.add([
-        {id: 0, label:"Myriel", group: 1},
-        {id: 1, label:"Napoleon", group: 1},
-        {id: 2, label:"Baptistine", group: 1},
-    ]);
+    $('#network').append(canvas);
 
-
-    var edges = new vis.DataSet();
-    edges.on('*', function (event, properties, senderId) {
-        console.log('event', event, properties);
+    var network = $('#network');
+    network.css({
+        width: window.innerWidth,
+        height: window.innerHeight
     });
-    edges.add([
-        {from: 0, to: 1},
-        {from: 0, to: 2},
-        {from: 1, to: 2}
-    ]);
 
-    var container = document.getElementById('network');
-    var data = {
-        nodes: nodes,
-        edges: edges
-    };
-
-    var network = new vis.Network(container, data, {});
-
-    var i = 3;
-    setInterval(function() {
-
-        ++i;
-        var pnode = [{
-            id: i, label: "new", group: 1
-        }];
-        var pedge = [{
-            from: i-1,
-            to: i
-        }];
-        nodes.update(pnode);
-        edges.update(pedge);
-
-
-    }, 1000);
+    return canvas;
 
 }
 
@@ -154,7 +128,6 @@ function populateNetworkRecursive(queries, nodes, edges, iter) {
                     id: size*iter+i+1,
                     title: data[i].title,
                     url: data[i].url,
-                    //group: iter+1,
                     color: PALETTE[iter+1]
                 });
                 pedges.push({
@@ -172,6 +145,7 @@ function populateNetworkRecursive(queries, nodes, edges, iter) {
 
         }
     });
+
 }
 
 
@@ -204,8 +178,28 @@ function generateNetwork() {
         edges: edges
     };
 
+    var options = {
+        nodes: {
+            shape: 'dot',
+            size: 16
+        },
+        physics: {
+            forceAtlas2Based: {
+                gravitationalConstant: -100,
+                centralGravity: 0.05,
+                springLength: 25,
+                springConstant: 0.1
+            },
+            maxVelocity: 120,
+            solver: 'forceAtlas2Based',
+            timestep: 0.35,
+            stabilization: {iterations: 100}
+        }
+    };
+
+    var network = new vis.Network(container, data, options);
+
     var queries = [article];
-    var network = new vis.Network(container, data, {});
     populateNetworkRecursive(queries, nodes, edges, 0);
 
     network.on("selectNode", function (params) {
@@ -220,11 +214,14 @@ function generateNetwork() {
 }
 
 
-
 $(window).on('load', function() {
-
-    sizeCanvas();
+    redirectIndex();
+    createCanvas();
     generateNetwork();
-
 });
+
+
+$(window).on('resize', function() {
+    resizeCanvas();
+})
 

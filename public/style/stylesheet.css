@@ -1,9 +1,5 @@
 
 
-body {
-    margin: 0;
-}
-
 
 input[type="text"], textarea {
     outline: none;
@@ -13,21 +9,14 @@ input[type="text"], textarea {
 
 .query-logo {
     position: relative;
-    top: 6px;
-    font-family: 'Courier New', Courier, monospace
+    top: 5px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 
 .advanced-query-logo {
     position: relative;
     text-align: center !important;
-    font-family: 'Courier New', Courier, monospace
+    font-family: 'Courier New', Courier, monospace;
 }
-
-#network {
-    width: 900px;
-    height: 900px;
-    border: 1px solid lightgray;
-}
-
 
