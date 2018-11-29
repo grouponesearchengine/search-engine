@@ -1,0 +1,25 @@
+
+
+body, html {
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    background: #ffffff;
+    position: absolute;
+    top: 0px; left: 0px;
+}
+
+.similarity-description-wrapper {
+    position: absolute;
+    height: 5%; width: 100%;
+    top: 95%; left: 0%;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.similarity-logo:hover {
+    cursor: pointer;
+}
+
+
